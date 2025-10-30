@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+
+<head>
+    <title>In class stuff</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script>
+        window.addEventListener("click", () => {
+            let html = document.querySelector("html")
+            let theme = html.dataset.bsTheme;
+            if (theme == "dark") {
+                html.dataset.bsTheme = "light";
+            }
+            else {
+                html.dataset.bsTheme = "dark";
+            }
+            console.log({ theme });
+        })
+    </script>
+    <style>
+        * {
+            outline: 1px solid black;
+        }
+
+        nav * {
+            outline: none;
+        }
+
+        /*@media screen and (width <=768px) {
+            nav li {
+                display: list-item;
+            }
+
+            nav ul {
+                position: absolute;
+                top: 40px;
+                left: 10px;
+            }
+
+            .collapse:not(.show) {
+                display: block !important;
+            }
+        }*/
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-danger">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">My site</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNavBar"
+                    aria-controls="primaryNavBar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="primaryNavBar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="#">Link 1</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Link 2</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Link 3</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <div class="row row-cols-xs-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6">
+            <div class="card col" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card’s content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+            <article class="col ">
+                <section class="bg-dark">
+                    <h2>A2</h2>
+                </section>
+            </article>
+            <article class="col">
+                <section>
+                    <h2>A3</h2>
+                </section>
+            </article>
+            <article class="col ">
+                <section>
+                    <h2>A4</h2>
+                </section>
+            </article>
+            <article class="col">
+                <section>
+                    <h2>A1</h2>
+                </section>
+            </article>
+            <article class="col">
+                <section>
+                    <h2>A2</h2>
+                </section>
+            </article>
+            <article class="col">
+                <section>
+                    <h2>A3</h2>
+                </section>
+            </article>
+            <article class="col">
+                <section>
+                    <h2>A4</h2>
+                </section>
+            </article>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>@social</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+    <footer>&copy; The fun</footer>
+</body>
+
+</html>

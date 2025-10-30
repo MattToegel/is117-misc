@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>In class stuff</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            outline: 1px solid black;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        header {
+            text-align: center;
+        }
+
+        article {
+            width: 200px;
+            height: 200px;
+        }
+
+        main {
+            display: flex;
+
+        }
+
+        main {
+            flex-wrap: wrap;
+
+            article {
+                flex-basis: 20%;
+            }
+
+            article:first-child {
+                flex-basis: 50%;
+                order: 4;
+            }
+        }
+
+        @media screen and (width <=400px) {
+            nav ul li {
+                display: block;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li>My site</li>
+                <li><a href="#">Link 1</a></li>
+                <li><a href="#">Link 2</a></li>
+                <li><a href="#">Link 3</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article>
+            <section>
+                <h2>A1</h2>
+            </section>
+        </article>
+        <article>
+            <section>
+                <h2>A2</h2>
+            </section>
+        </article>
+        <article>
+            <section>
+                <h2>A3</h2>
+            </section>
+        </article>
+        <article>
+            <section>
+                <h2>A4</h2>
+            </section>
+        </article>
+    </main>
+    <footer>&copy; The fun</footer>
+</body>
+
+</html>
