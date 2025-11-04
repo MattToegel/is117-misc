@@ -1,0 +1,206 @@
+<!-- exploring flex navs, active/current classes for highlighting active route, and responsive design-->
+ <html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Navigation Demo</title>
+</head>
+
+<body>
+    <nav>
+        <button>&#9776;</button>
+        <ul>
+
+            <li><a href="index.html">Home</a></li>
+            <li><a class="active" href="about.html">About</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="returns.html">Returns</a></li>
+            <li><a href="#cart">Cart</a>
+                <ul class="subitem">
+                    <li><a href="#">Cart 1</a></li>
+                    <li><a href="#">Cart 2</a></li>
+                    <li><a href="#">Cart 3</a></li>
+                    <li><a href="#">Cart4</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <script defer>
+        let b = document.querySelector("button");
+        if (b) {
+            b.addEventListener("click", () => {
+                let listItems = document.querySelectorAll("nav ul");
+                listItems.forEach(item => {
+                    item.classList.toggle("hidden");
+                });
+            });
+        }
+    </script>
+
+    <script defer>
+        // To test this with a single file, rename this and navigate to the renamed version
+        // it should highlight the active anchor tag
+        let tags = document.querySelectorAll("nav a");
+        tags.forEach(anchor => {
+
+            let h = anchor.href.replace("#", "");
+            console.log({ anchor }, window.location, h);
+            anchor.classList.toggle("active", window.location.href == h);
+        });
+    </script>
+    <style>
+        nav {
+            width: 100%;
+            position: sticky;
+            top: 0;
+
+            a.active {
+                background-color: red;
+            }
+
+            ul {
+                list-style: none;
+                display: flex;
+                margin-bottom: .5em;
+                margin-top: 0;
+                display: flex;
+                height: fit-content;
+                flex-direction: row;
+                max-height: 1000px;
+                transition: max-height .5s ease-in;
+                overflow: hidden;
+                padding: .25em;
+                line-height: 1.5;
+            }
+
+            ul li {
+                padding: .25em;
+                width: fit-content;
+                height: fit-content;
+            }
+
+            ul li a {
+                text-decoration: none;
+                color: gray;
+                background-color: black;
+                padding: .5em;
+                border-radius: 2em;
+            }
+
+            ul li:has(.subitem) {
+                position: relative;
+
+                :hover>.subitem {
+                    position: absolute;
+                    width: 100px;
+                    display: flex;
+
+                    flex-direction: column;
+                }
+            }
+
+            .subitem {
+                display: none;
+                position: absolute;
+                left: 0;
+            }
+
+
+
+            button {
+                margin-bottom: 1em;
+                right: 0;
+            }
+        }
+
+
+
+
+
+        @media (width >=768px) {
+            button {
+                display: none;
+            }
+        }
+
+        @media (width < 768px) {
+            button {
+                display: inline;
+                width: 2em;
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+
+            ul.hidden {
+                max-height: 0;
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+        }
+    </style>
+    <main>
+        <section class="filler-content">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum
+                vestibulum.
+            </p>
+            <p>Curabitur ut sem at sapien faucibus gravida. Integer euismod, urna at gravida dictum, justo arcu lacinia
+                nunc, a pharetra ipsum risus non velit.</p>
+            <p>Praesent tincidunt, orci non facilisis aliquet, justo risus feugiat nisl, quis consequat nunc neque et
+                massa.
+            </p>
+            <p>Fusce ut velit laoreet, tempus arcu eu, molestie tortor. Maecenas in dolor non orci cursus aliquet.</p>
+            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+            <p>Aliquam erat volutpat. Suspendisse potenti. Nam lacinia, nibh nec dictum rutrum, sapien risus feugiat
+                ipsum,
+                sed porttitor quam mi vitae augue.</p>
+            <p>Morbi vel sem at ipsum scelerisque fermentum. Nunc accumsan, nisl in tincidunt mollis, libero mauris
+                feugiat
+                sapien, ac bibendum massa urna id velit.</p>
+            <p>Donec quis felis ac justo suscipit aliquet. Pellentesque habitant morbi tristique senectus et netus et
+                malesuada fames ac turpis egestas.</p>
+            <p>Integer tincidunt, eros vitae vestibulum pretium, sapien urna efficitur lectus, a congue nunc lorem a
+                dolor.
+            </p>
+            <p>Vivamus congue enim vitae mi ultrices, at convallis neque mattis. Sed dignissim, urna non ultrices
+                tincidunt,
+                orci nisl aliquet sapien, a tincidunt ipsum leo sit amet augue.</p>
+            <p>Nullam nec justo a sapien aliquet facilisis. Curabitur sit amet arcu sed elit aliquet molestie.</p>
+            <p>Etiam sed orci at lorem facilisis gravida. Quisque a nisl vitae sapien dictum faucibus.</p>
+            <p>Phasellus euismod, urna sed hendrerit congue, purus lectus tristique orci, id hendrerit lorem turpis ac
+                ante.
+            </p>
+            <p>Proin ut augue vitae lorem volutpat gravida. Suspendisse at orci at justo facilisis convallis.</p>
+            <p>Maecenas sit amet mi id risus pulvinar aliquet. Integer at lacus vitae purus luctus hendrerit.</p>
+            <p>Vivamus placerat lorem non eros consequat, vitae tristique augue hendrerit. Aenean vitae urna nec nisl
+                cursus
+                fermentum.</p>
+            <p>Sed consequat magna a nunc sollicitudin, a elementum nunc vulputate. Vestibulum ante ipsum primis in
+                faucibus
+                orci luctus et ultrices posuere cubilia curae.</p>
+            <p>Proin luctus, justo non facilisis volutpat, arcu purus hendrerit lectus, id mattis libero neque sit amet
+                sapien.</p>
+            <p>In hac habitasse platea dictumst. Nunc vel ex nec sapien fermentum tincidunt a sed tellus.</p>
+            <p>Praesent a mauris vitae tortor tristique sodales. Integer suscipit, nisl vitae bibendum posuere, orci
+                augue
+                tincidunt tortor, vitae efficitur sapien risus id massa.</p>
+            <p>Aliquam tincidunt mi sit amet orci aliquet, eu ultrices risus facilisis. Suspendisse non massa ac urna
+                tincidunt aliquet.</p>
+            <p>Morbi sodales ligula a justo tristique, vitae efficitur elit consectetur. Curabitur volutpat nulla non
+                sapien
+                cursus, quis faucibus nibh fermentum.</p>
+            <p>Donec gravida nisl vitae libero dictum, nec volutpat sem tincidunt. Vestibulum euismod nisi sed augue
+                lacinia, at convallis sapien gravida.</p>
+            <p>Nulla facilisi. Integer non nulla et risus ultricies faucibus. Mauris id risus nec felis posuere luctus.
+            </p>
+            <p>Etiam mollis, sapien sit amet luctus gravida, urna ipsum dictum mi, sit amet volutpat mi nibh sit amet
+                elit.
+            </p>
+        </section>
+    </main>
+</body>
+
+</html>
