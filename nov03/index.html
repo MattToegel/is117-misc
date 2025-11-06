@@ -1,205 +1,451 @@
-<!-- exploring flex navs, active/current classes for highlighting active route, and responsive design-->
- <html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Navigation Demo</title>
-</head>
-
-<body>
-    <nav>
-        <button>&#9776;</button>
-        <ul>
-
-            <li><a href="index.html">Home</a></li>
-            <li><a class="active" href="about.html">About</a></li>
-            <li><a href="products.html">Products</a></li>
-            <li><a href="returns.html">Returns</a></li>
-            <li><a href="#cart">Cart</a>
-                <ul class="subitem">
-                    <li><a href="#">Cart 1</a></li>
-                    <li><a href="#">Cart 2</a></li>
-                    <li><a href="#">Cart 3</a></li>
-                    <li><a href="#">Cart4</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-    <script defer>
-        let b = document.querySelector("button");
-        if (b) {
-            b.addEventListener("click", () => {
-                let listItems = document.querySelectorAll("nav ul");
-                listItems.forEach(item => {
-                    item.classList.toggle("hidden");
-                });
-            });
-        }
-    </script>
-
-    <script defer>
-        // To test this with a single file, rename this and navigate to the renamed version
-        // it should highlight the active anchor tag
-        let tags = document.querySelectorAll("nav a");
-        tags.forEach(anchor => {
-
-            let h = anchor.href.replace("#", "");
-            console.log({ anchor }, window.location, h);
-            anchor.classList.toggle("active", window.location.href == h);
-        });
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game - Cards</title>
     <style>
-        nav {
-            width: 100%;
-            position: sticky;
-            top: 0;
-
-            a.active {
-                background-color: red;
-            }
-
-            ul {
-                list-style: none;
-                display: flex;
-                margin-bottom: .5em;
-                margin-top: 0;
-                display: flex;
-                height: fit-content;
-                flex-direction: row;
-                max-height: 1000px;
-                transition: max-height .5s ease-in;
-                overflow: hidden;
-                padding: .25em;
-                line-height: 1.5;
-            }
-
-            ul li {
-                padding: .25em;
-                width: fit-content;
-                height: fit-content;
-            }
-
-            ul li a {
-                text-decoration: none;
-                color: gray;
-                background-color: black;
-                padding: .5em;
-                border-radius: 2em;
-            }
-
-            ul li:has(.subitem) {
-                position: relative;
-
-                :hover>.subitem {
-                    position: absolute;
-                    width: 100px;
-                    display: flex;
-
-                    flex-direction: column;
-                }
-            }
-
-            .subitem {
-                display: none;
-                position: absolute;
-                left: 0;
-            }
-
-
-
-            button {
-                margin-bottom: 1em;
-                right: 0;
-            }
+        * {
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
         }
 
-
-
-
-
-        @media (width >=768px) {
-            button {
-                display: none;
-            }
+        body {
+            margin: 0;
+            padding: 1rem;
+            background: #f5f5f5;
+            color: #111;
+            height: 100%;
         }
 
-        @media (width < 768px) {
-            button {
-                display: inline;
-                width: 2em;
-            }
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-            nav ul {
-                flex-direction: column;
-            }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1%;
+            height: calc(100vh - 200px);
+            grid-auto-rows: 1fr;
+        }
 
-            ul.hidden {
-                max-height: 0;
-                padding-top: 0;
-                padding-bottom: 0;
+        /* hidden checkbox controls the flip
+           use visually-hidden technique rather than display:none so label toggles reliably on touch devices */
+        .chk {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            border: 0;
+        }
+
+        /* flipper */
+        .flip {
+            display: block;
+            position: relative;
+            aspect-ratio: auto;
+            transform-style: preserve-3d;
+            transition: transform .45s ease;
+            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0.12);
+            height: 100%;
+        }
+
+        .chk:checked+.flip {
+            transform: rotateY(180deg);
+        }
+
+        /* faces */
+        .front,
+        .back {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .front {
+            background: #222;
+            color: #fff;
+            font-weight: 600;
+            transform: rotateY(0);
+        }
+
+        .back {
+            background: #0a84ff;
+            color: #fff;
+            transform: rotateY(180deg);
+            padding: 0.5rem;
+            text-align: center;
+            font-size: .75em;
+        }
+
+        [disabled]~* .back {
+            background: green;
+        }
+
+        .wrong~* .back {
+            background-color: red;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        #score::before {
+            content: "Score: ";
+        }
+
+        #tries:before {
+            content: "Attempts: ";
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .flip {
+                transition: none;
             }
         }
     </style>
+    <script>
+        const bank = [
+            [
+                ['box-sizing', 'Controls how width/height are calculated: content-box vs border-box.'],
+                ['margin', 'Outside space around an element; can collapse between adjacent vertical margins.'],
+                ['padding', 'Inner space between content and border; increases the element box size.'],
+                ['border', 'Line around padding and content; configurable style, width and color.'],
+                ['width', 'Sets horizontal size of an element (absolute or percentage values).'],
+                ['height', 'Sets vertical size of an element (absolute or percentage values).'],
+                ['max-width', 'Limits how wide an element can grow; useful for responsive layouts.'],
+                ['min-width', 'Ensures an element does not shrink below the specified width.'],
+                ['overflow', 'Controls handling of overflowing content: visible, hidden, scroll, or auto.'],
+                ['z-index', 'Controls stack order of positioned elements; higher values sit on top.'],
+                ['opacity', 'Sets element transparency from 0 (transparent) to 1 (opaque).'],
+                ['visibility', 'visible shows element; hidden hides it but preserves layout space.'],
+                ['float', 'Removes element from normal flow and allows inline content to wrap around.'],
+                ['clear', 'Prevents an element from sitting alongside floated elements (left/right/both).'],
+                ['background', 'Defines background color/image/position/size for an element.'],
+                ['color', 'Sets text color; typically inherited by child elements.'],
+                ['font-size', 'Controls size of text; accepts absolute and relative units.'],
+                ['line-height', 'Controls spacing between lines of text; affects readability and alignment.']
+            ],
+            [
+                ['display: block', 'Block element; starts on a new line and fills available width.'],
+                ['display: inline', 'Flows with text; width/height follow content; no line break.'],
+                ['display: inline-block', 'Inline flow but accepts width/height like a block.'],
+                ['display: none', 'Hidden and removed from layout (no space taken).'],
+                ['display: flex', 'Creates a one-dimensional flex container for easy alignment.'],
+                ['display: grid', 'Creates a two-dimensional grid (rows and columns).'],
+                ['position: static', 'Default; follows normal document flow; offsets ignored.'],
+                ['position: relative', 'Stays in flow; can be shifted without leaving layout.'],
+                ['position: absolute', 'Removed from flow; positioned relative to nearest positioned ancestor.'],
+                ['position: fixed', 'Fixed to the viewport; stays put while scrolling.'],
+                ['position: sticky', 'Acts like relative until scrolling reaches a threshold, then becomes fixed.'],
+                ['flex-direction', 'Sets main axis (row or column) for flex layout.'],
+                ['justify-content', 'Aligns items along the main axis (start, center, space-between).'],
+                ['align-items', 'Aligns items along the cross axis (stretch, center, flex-start).'],
+                ['flex-wrap', 'Controls whether flex items wrap onto new lines.'],
+                ['order', 'Integer to change the visual order of flex items.'],
+                ['flex', 'Shorthand for flex-grow, flex-shrink and flex-basis (controls sizing).'],
+                ['align-self', 'Overrides align-items for a single flex item.']
+            ]
+        ];
+        // pick a random bank (set of pairs)
+        const customPairs = bank[Math.floor(Math.random() * bank.length)];
+
+
+        // build 18 pairs (36 cards), filling missing texts with defaults
+        const pairs = Array.from({ length: 18 }, (_, i) => {
+            const aId = `c${i * 2 + 1}`;
+            const bId = `c${i * 2 + 2}`;
+            const texts = customPairs[i] || [`Content for ${aId}`, `Content for ${bId}`];
+            return { ids: [aId, bId], texts };
+        });
+
+        // build quick lookup map
+        const data = {};
+        pairs.forEach(p => {
+            const [a, b] = p.ids;
+            const [ta, tb] = p.texts;
+            data[a] = { text: ta, pair: b };
+            data[b] = { text: tb, pair: a };
+        });
+        let triesDisplay;// element ref populated onload
+        let scoreDisplay;// element ref populated onload
+        let state = {
+            tries: 0,
+            score: 0
+        }
+
+        window.addEventListener("load", () => {
+            triesDisplay = document.getElementById("tries");
+            scoreDisplay = document.getElementById("score");
+            // populate DOM card backs using the data map
+            Object.keys(data).forEach(id => {
+                const back = document.querySelector(`label[for="${id}"] .back`);
+                if (back) back.textContent = data[id].text;
+            });
+            document.querySelectorAll(".card").forEach(card => {
+                // shuffle
+                card.querySelector(".front").innerText = "Card";
+                card.style.order = Math.floor(Math.random() * 9);
+                //console.log({ card }, card.style.order)
+            })
+
+            let selected = [];
+            function evaluateSelection() {
+                // validate/evaluate
+                let p1 = selected[0];
+                let p2 = selected[1];
+                //console.log(p1, p2, data[p1].pair, data[p2].pair, data[p1].pair == p2)
+                let match = data[p1].pair == p2;
+                state.tries++;
+                if (match) {
+                    state.score++;
+                }
+                // disable cards and potentially show as wrong
+                document.querySelectorAll(`#${p1},#${p2}`).forEach(ele => {
+                    ele.disabled = true;
+                    if (!match) {
+                        ele.classList.toggle("wrong")
+                    }
+                });
+                // display stats
+                scoreDisplay.innerText = state.score;
+                triesDisplay.innerText = state.tries;
+                // delay cleanup
+                setTimeout(() => {
+                    if (!match) {
+                        selected.forEach(sel => {
+                            let card = document.getElementById(sel);
+                            card.checked = false;
+                            card.disabled = false;
+                            card.classList.toggle("wrong");
+                        })
+
+                    }
+                    selected = [];
+                    let complete = document.querySelectorAll(".card input[disabled]").length >= 36;
+                    if (complete && confirm(`Game Over!\nYou scored ${state.score} points.\nPlay again?`)) {
+                        window.location.reload();
+                    }
+                }, match ? 100 : 3000)
+            }
+
+            let inputs = document.querySelectorAll(".chk");
+            inputs.forEach(inp => {
+                // attached change listerner to each checkbox
+                inp.addEventListener("change", (event) => {
+
+                    if (selected.length == 2) {
+                        // prevent deselection during evaluation
+                        event.target.checked = selected.includes(event.target.id);
+                    }
+                    else if (!event.target.checked) {
+                        // remove selected value from list (undo first selection)
+                        selected = selected.filter(s => s != event.target.id)
+                    }
+                    else if (selected.length < 2) {
+                        // eligible to track
+                        selected.push(event.target.id);
+                        if (selected.length == 2) {
+                            evaluateSelection();
+                        }
+                    }
+                    else if (selected.length > 2) {
+                        //deselect anything beyond 2
+                        event.target.checked = false;
+                    }
+                });
+            })
+        })
+
+
+
+    </script>
+</head>
+
+<body>
     <main>
-        <section class="filler-content">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum
-                vestibulum.
-            </p>
-            <p>Curabitur ut sem at sapien faucibus gravida. Integer euismod, urna at gravida dictum, justo arcu lacinia
-                nunc, a pharetra ipsum risus non velit.</p>
-            <p>Praesent tincidunt, orci non facilisis aliquet, justo risus feugiat nisl, quis consequat nunc neque et
-                massa.
-            </p>
-            <p>Fusce ut velit laoreet, tempus arcu eu, molestie tortor. Maecenas in dolor non orci cursus aliquet.</p>
-            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
-            <p>Aliquam erat volutpat. Suspendisse potenti. Nam lacinia, nibh nec dictum rutrum, sapien risus feugiat
-                ipsum,
-                sed porttitor quam mi vitae augue.</p>
-            <p>Morbi vel sem at ipsum scelerisque fermentum. Nunc accumsan, nisl in tincidunt mollis, libero mauris
-                feugiat
-                sapien, ac bibendum massa urna id velit.</p>
-            <p>Donec quis felis ac justo suscipit aliquet. Pellentesque habitant morbi tristique senectus et netus et
-                malesuada fames ac turpis egestas.</p>
-            <p>Integer tincidunt, eros vitae vestibulum pretium, sapien urna efficitur lectus, a congue nunc lorem a
-                dolor.
-            </p>
-            <p>Vivamus congue enim vitae mi ultrices, at convallis neque mattis. Sed dignissim, urna non ultrices
-                tincidunt,
-                orci nisl aliquet sapien, a tincidunt ipsum leo sit amet augue.</p>
-            <p>Nullam nec justo a sapien aliquet facilisis. Curabitur sit amet arcu sed elit aliquet molestie.</p>
-            <p>Etiam sed orci at lorem facilisis gravida. Quisque a nisl vitae sapien dictum faucibus.</p>
-            <p>Phasellus euismod, urna sed hendrerit congue, purus lectus tristique orci, id hendrerit lorem turpis ac
-                ante.
-            </p>
-            <p>Proin ut augue vitae lorem volutpat gravida. Suspendisse at orci at justo facilisis convallis.</p>
-            <p>Maecenas sit amet mi id risus pulvinar aliquet. Integer at lacus vitae purus luctus hendrerit.</p>
-            <p>Vivamus placerat lorem non eros consequat, vitae tristique augue hendrerit. Aenean vitae urna nec nisl
-                cursus
-                fermentum.</p>
-            <p>Sed consequat magna a nunc sollicitudin, a elementum nunc vulputate. Vestibulum ante ipsum primis in
-                faucibus
-                orci luctus et ultrices posuere cubilia curae.</p>
-            <p>Proin luctus, justo non facilisis volutpat, arcu purus hendrerit lectus, id mattis libero neque sit amet
-                sapien.</p>
-            <p>In hac habitasse platea dictumst. Nunc vel ex nec sapien fermentum tincidunt a sed tellus.</p>
-            <p>Praesent a mauris vitae tortor tristique sodales. Integer suscipit, nisl vitae bibendum posuere, orci
-                augue
-                tincidunt tortor, vitae efficitur sapien risus id massa.</p>
-            <p>Aliquam tincidunt mi sit amet orci aliquet, eu ultrices risus facilisis. Suspendisse non massa ac urna
-                tincidunt aliquet.</p>
-            <p>Morbi sodales ligula a justo tristique, vitae efficitur elit consectetur. Curabitur volutpat nulla non
-                sapien
-                cursus, quis faucibus nibh fermentum.</p>
-            <p>Donec gravida nisl vitae libero dictum, nec volutpat sem tincidunt. Vestibulum euismod nisi sed augue
-                lacinia, at convallis sapien gravida.</p>
-            <p>Nulla facilisi. Integer non nulla et risus ultricies faucibus. Mauris id risus nec felis posuere luctus.
-            </p>
-            <p>Etiam mollis, sapien sit amet luctus gravida, urna ipsum dictum mi, sit amet volutpat mi nibh sit amet
-                elit.
-            </p>
-        </section>
+        <header>
+            <h1>CSS Props Matching Game</h1>
+        </header>
+        <div class="stats">
+            <span id="score">0</span>
+            <span id="tries">0</span>
+        </div>
+        <div class="grid">
+            <!-- 6x6 grid: 36 cards -->
+            <!-- Cards 1..36 -->
+            <div class="card"><input id="c1" class="chk" type="checkbox"><label class="flip" for="c1">
+                    <div class="front">Card 1</div>
+                    <div class="back">Content for card 1</div>
+                </label></div>
+            <div class="card"><input id="c2" class="chk" type="checkbox"><label class="flip" for="c2">
+                    <div class="front">Card 2</div>
+                    <div class="back">Content for card 2</div>
+                </label></div>
+            <div class="card"><input id="c3" class="chk" type="checkbox"><label class="flip" for="c3">
+                    <div class="front">Card 3</div>
+                    <div class="back">Content for card 3</div>
+                </label></div>
+            <div class="card"><input id="c4" class="chk" type="checkbox"><label class="flip" for="c4">
+                    <div class="front">Card 4</div>
+                    <div class="back">Content for card 4</div>
+                </label></div>
+            <div class="card"><input id="c5" class="chk" type="checkbox"><label class="flip" for="c5">
+                    <div class="front">Card 5</div>
+                    <div class="back">Content for card 5</div>
+                </label></div>
+            <div class="card"><input id="c6" class="chk" type="checkbox"><label class="flip" for="c6">
+                    <div class="front">Card 6</div>
+                    <div class="back">Content for card 6</div>
+                </label></div>
+
+            <div class="card"><input id="c7" class="chk" type="checkbox"><label class="flip" for="c7">
+                    <div class="front">Card 7</div>
+                    <div class="back">Content for card 7</div>
+                </label></div>
+            <div class="card"><input id="c8" class="chk" type="checkbox"><label class="flip" for="c8">
+                    <div class="front">Card 8</div>
+                    <div class="back">Content for card 8</div>
+                </label></div>
+            <div class="card"><input id="c9" class="chk" type="checkbox"><label class="flip" for="c9">
+                    <div class="front">Card 9</div>
+                    <div class="back">Content for card 9</div>
+                </label></div>
+            <div class="card"><input id="c10" class="chk" type="checkbox"><label class="flip" for="c10">
+                    <div class="front">Card 10</div>
+                    <div class="back">Content for card 10</div>
+                </label></div>
+            <div class="card"><input id="c11" class="chk" type="checkbox"><label class="flip" for="c11">
+                    <div class="front">Card 11</div>
+                    <div class="back">Content for card 11</div>
+                </label></div>
+            <div class="card"><input id="c12" class="chk" type="checkbox"><label class="flip" for="c12">
+                    <div class="front">Card 12</div>
+                    <div class="back">Content for card 12</div>
+                </label></div>
+
+            <div class="card"><input id="c13" class="chk" type="checkbox"><label class="flip" for="c13">
+                    <div class="front">Card 13</div>
+                    <div class="back">Content for card 13</div>
+                </label></div>
+            <div class="card"><input id="c14" class="chk" type="checkbox"><label class="flip" for="c14">
+                    <div class="front">Card 14</div>
+                    <div class="back">Content for card 14</div>
+                </label></div>
+            <div class="card"><input id="c15" class="chk" type="checkbox"><label class="flip" for="c15">
+                    <div class="front">Card 15</div>
+                    <div class="back">Content for card 15</div>
+                </label></div>
+            <div class="card"><input id="c16" class="chk" type="checkbox"><label class="flip" for="c16">
+                    <div class="front">Card 16</div>
+                    <div class="back">Content for card 16</div>
+                </label></div>
+            <div class="card"><input id="c17" class="chk" type="checkbox"><label class="flip" for="c17">
+                    <div class="front">Card 17</div>
+                    <div class="back">Content for card 17</div>
+                </label></div>
+            <div class="card"><input id="c18" class="chk" type="checkbox"><label class="flip" for="c18">
+                    <div class="front">Card 18</div>
+                    <div class="back">Content for card 18</div>
+                </label></div>
+
+            <div class="card"><input id="c19" class="chk" type="checkbox"><label class="flip" for="c19">
+                    <div class="front">Card 19</div>
+                    <div class="back">Content for card 19</div>
+                </label></div>
+            <div class="card"><input id="c20" class="chk" type="checkbox"><label class="flip" for="c20">
+                    <div class="front">Card 20</div>
+                    <div class="back">Content for card 20</div>
+                </label></div>
+            <div class="card"><input id="c21" class="chk" type="checkbox"><label class="flip" for="c21">
+                    <div class="front">Card 21</div>
+                    <div class="back">Content for card 21</div>
+                </label></div>
+            <div class="card"><input id="c22" class="chk" type="checkbox"><label class="flip" for="c22">
+                    <div class="front">Card 22</div>
+                    <div class="back">Content for card 22</div>
+                </label></div>
+            <div class="card"><input id="c23" class="chk" type="checkbox"><label class="flip" for="c23">
+                    <div class="front">Card 23</div>
+                    <div class="back">Content for card 23</div>
+                </label></div>
+            <div class="card"><input id="c24" class="chk" type="checkbox"><label class="flip" for="c24">
+                    <div class="front">Card 24</div>
+                    <div class="back">Content for card 24</div>
+                </label></div>
+
+            <div class="card"><input id="c25" class="chk" type="checkbox"><label class="flip" for="c25">
+                    <div class="front">Card 25</div>
+                    <div class="back">Content for card 25</div>
+                </label></div>
+            <div class="card"><input id="c26" class="chk" type="checkbox"><label class="flip" for="c26">
+                    <div class="front">Card 26</div>
+                    <div class="back">Content for card 26</div>
+                </label></div>
+            <div class="card"><input id="c27" class="chk" type="checkbox"><label class="flip" for="c27">
+                    <div class="front">Card 27</div>
+                    <div class="back">Content for card 27</div>
+                </label></div>
+            <div class="card"><input id="c28" class="chk" type="checkbox"><label class="flip" for="c28">
+                    <div class="front">Card 28</div>
+                    <div class="back">Content for card 28</div>
+                </label></div>
+            <div class="card"><input id="c29" class="chk" type="checkbox"><label class="flip" for="c29">
+                    <div class="front">Card 29</div>
+                    <div class="back">Content for card 29</div>
+                </label></div>
+            <div class="card"><input id="c30" class="chk" type="checkbox"><label class="flip" for="c30">
+                    <div class="front">Card 30</div>
+                    <div class="back">Content for card 30</div>
+                </label></div>
+
+            <div class="card"><input id="c31" class="chk" type="checkbox"><label class="flip" for="c31">
+                    <div class="front">Card 31</div>
+                    <div class="back">Content for card 31</div>
+                </label></div>
+            <div class="card"><input id="c32" class="chk" type="checkbox"><label class="flip" for="c32">
+                    <div class="front">Card 32</div>
+                    <div class="back">Content for card 32</div>
+                </label></div>
+            <div class="card"><input id="c33" class="chk" type="checkbox"><label class="flip" for="c33">
+                    <div class="front">Card 33</div>
+                    <div class="back">Content for card 33</div>
+                </label></div>
+            <div class="card"><input id="c34" class="chk" type="checkbox"><label class="flip" for="c34">
+                    <div class="front">Card 34</div>
+                    <div class="back">Content for card 34</div>
+                </label></div>
+            <div class="card"><input id="c35" class="chk" type="checkbox"><label class="flip" for="c35">
+                    <div class="front">Card 35</div>
+                    <div class="back">Content for card 35</div>
+                </label></div>
+            <div class="card"><input id="c36" class="chk" type="checkbox"><label class="flip" for="c36">
+                    <div class="front">Card 36</div>
+                    <div class="back">Content for card 36</div>
+                </label></div>
+        </div>
     </main>
 </body>
 
